@@ -208,3 +208,5 @@ __marimo__/
 
 outputs/
 *.mp4
+
+results/frames_3d

@@ -84,8 +84,8 @@ def visualize_3D(c1, c2, c3, t, show=True, save_dir=None, filename='plot.png'):
     iso = iso_c1 + iso_c2 + iso_c3
     iso = iso.smooth(n_iter=20, relaxation_factor=0.1)
 
-    p = pv.Plotter()
-    title = p.add_text(f'$t={{{t}}}$', color='b', font_size=20, position=[40,680])
+    p = pv.Plotter(off_screen=True)
+    title = p.add_text(f't={t}', font='courier', color='white', font_size=20, position=[40,680])
     actor = p.add_mesh(iso, scalars='colors', rgb=True)
     p.camera.position = (155.63850576500076, 155.63850576500076, 180)
 
@@ -98,3 +98,5 @@ def visualize_3D(c1, c2, c3, t, show=True, save_dir=None, filename='plot.png'):
         p.show()
     else:
         p.close()
+
+    del grid, iso_c1, iso_c2, iso_c3, iso
