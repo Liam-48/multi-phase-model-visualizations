@@ -7,13 +7,10 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(current_dir)
 output_dir = os.path.join(parent_dir, "results/frames_3d")
 
-def frames_to_video(
-    frame_folder,
-    output_file,
-    fps=350,
-    min_repeat=1,
-    max_repeat=20
-):
+def frames_to_video(frame_folder, output_file, fps=350, min_repeat=1, max_repeat=20):
+    """
+    Creates a video (.mp4) from frames inside a given folder, following a log speed (slower at the beginning).
+    """
     def extract_number(filename):
         match = re.search(r'frame_(\d+)', filename)
         return int(match.group(1)) if match else -1
@@ -34,4 +31,4 @@ def frames_to_video(
             for _ in range(rep):
                 writer.append_data(image)
 
-frames_to_video(output_dir, os.path.join(parent_dir, "results/phase_separation_3D.mp4"))
+frames_to_video(output_dir, os.path.join(parent_dir, "results/phase_separation_3D.mp4")) #Test run

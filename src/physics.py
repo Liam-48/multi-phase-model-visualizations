@@ -1,8 +1,7 @@
 import numpy as np
 from numba import njit
 
-@njit
-def laplacian_2D(u, dx=1.0):
+def laplacian_2D(u):
     """
     Compute the discrete 2D Laplacian of a scalar field u using
     a standard 5-point finite difference stencil with periodic boundaries.
@@ -14,21 +13,6 @@ def laplacian_2D(u, dx=1.0):
     dx : float, optional
         Grid spacing. Default is 1.0.
     """
-    N = u.shape
-    lap = np.empty_like(u)
-
-    for i in range(N):
-        for j in range(N):
-            val = (
-                u[(i+1)%N, j] + u[(i-1)%N, j] +
-                u[i, (j+1)%N] + u[i, (j-1)%N] -
-                4.0 * u[i, j]
-            )
-            lap[i, j] = val / dx**2
-
-    return lap
-
-def laplacian(u):
     return (
         np.roll(u, 1, axis=0) + np.roll(u, -1, axis=0) +
         np.roll(u, 1, axis=1) + np.roll(u, -1, axis=1) -
@@ -79,6 +63,9 @@ def chem_potential(c, gamma, lap):
     return 2.0 * c * (1.0 - c) * (1.0 - 2.0 * c) - gamma * lap(c)    
 
 def source_term(t, tf, k):
+    """
+    Example of source term for transfer of one phase to another.
+    """
     return 1/(1+np.exp(-k*(t-tf)))
 
 def CH_step(c1, c2, gamma, lap, dt, source_term):
@@ -100,17 +87,18 @@ def CH_step(c1, c2, gamma, lap, dt, source_term):
     steps : int
         Number of iterations.
     A : function
-        Function that computes the conversion term A(t, tf, c1, c2, c3).
+        Function that computes the conversion term.
     """
     c3 = 1 - c1 - c2
 
+    #Chemical potentials using chosen laplacian function
     mu1 = chem_potential(c1, gamma, lap)
     mu2 = chem_potential(c2, gamma, lap)
     mu3 = chem_potential(c3, gamma, lap)
 
+    #Updates phase fields
     c1_new = c1 + dt * (2 * lap(mu1) - lap(mu2) - lap(mu3))
     c2_new = c2 + dt * (2 * lap(mu2) - lap(mu1) - lap(mu3) + source_term)
-
-    c3_new = 1 - c1_new - c2_new
+    c3_new = 1.0 - c1_new - c2_new
 
     return c1_new, c2_new, c3_new

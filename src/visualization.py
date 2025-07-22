@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import to_rgb
 import pyvista as pv
 
+#Colors for each phase
 COLOR1 = np.array(to_rgb("#FF4545"))
 COLOR2 = np.array(to_rgb("#55F863"))
 COLOR3 = np.array(to_rgb("#4545FF"))
@@ -19,7 +20,6 @@ def generate_rgb(c1, c2, c3):
 
 def create_figure(N=8):
     """Create figure, imshow, and time text for animation."""
-    import matplotlib.pyplot as plt
     fig, ax = plt.subplots(figsize=(N, N), facecolor='white')
     dummy = np.zeros((1, 1, 3))
     im = ax.imshow(dummy, origin="lower")
@@ -33,19 +33,18 @@ def create_figure(N=8):
     return fig, ax, im, time_text
 
 def update_imshow(im, time_text, rgb_image, time):
+    """Update frames in matplotlib animation."""
     im.set_array(rgb_image)
     time_text.set_text(f't = {time:.2f}')
     return [im, time_text]
 
 def visualize_2D(c1, c2, c3, time, show=True, save_dir=None, filename='plot.png'):
-    color1 = np.array(to_rgb("#FF4545"))
-    color2 = np.array(to_rgb("#55F863"))
-    color3 = np.array(to_rgb("#4545FF"))
+    """Creates an RGB plot showing the three phases at given fields, using matplotlib."""
 
     rgb_image = (
-        c1[..., None] * color1 +
-        c2[..., None] * color2 +
-        c3[..., None] * color3
+        c1[..., None] * COLOR1 +
+        c2[..., None] * COLOR2 +
+        c3[..., None] * COLOR3
     )
     rgb_image = np.clip(rgb_image, 0, 1)
     fig, ax = plt.subplots(figsize=(8, 8), facecolor='white')
@@ -66,6 +65,8 @@ def visualize_2D(c1, c2, c3, time, show=True, save_dir=None, filename='plot.png'
         plt.close()
 
 def visualize_3D(c1, c2, c3, t, show=True, save_dir=None, filename='plot.png'):
+    """Creates a 3D visualization showing the three phases at given fields,
+    using isosurfaces from pyvista library."""
     grid = pv.ImageData()
     grid.dimensions = np.array(c1.shape) + 1
     for i, c in enumerate([c1, c2, c3], 1):
