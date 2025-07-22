@@ -3,7 +3,7 @@ This repository contains a Python implementation of the three-phase Cahn–Hilli
 
 ## About the project
 This project focuses on
-- **Solving** the three-phase Cahn–Hilliard modified equation (added a Source term) in 2D and 3D, with given parameters.
+- **Solving** the three-phase Cahn–Hilliard modified equation (added a source term) in 2D and 3D with given parameters.
 - **Visualizing** the phase evolution over time, using:
     - **2D:** Real-time animation generated on the fly.
     - **3D:** Saves frame to a folder, then stitches them into a video.
@@ -18,6 +18,8 @@ python src/main_2D.py
 ```
 An `.mp4` animation file will be saved to the `results` folder.
 
+https://github.com/user-attachments/assets/01b6f51e-ddfa-4718-8a6b-79b7e1c6168f
+
 **3D example**
 
 Run: 
@@ -31,6 +33,8 @@ To stitch these frames into a video, run:
 python src/video_script.py
 ```
 This will create an `.mp4` file inside the `results` folder.
+
+https://github.com/user-attachments/assets/98f982ac-69c1-43a3-943f-f65fe8acb4a2
 
 **Parameters**
 
